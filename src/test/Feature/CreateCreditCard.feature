@@ -23,8 +23,22 @@ Feature: Create credit card and validate PAN card mapping and responses
       |SUMAN |2021  |11112223331119|1.4L |07-07-25    |VISA|AABBK1122I    |
       |DURGA |2023  |11112223331120|5.5L |13-12-29    |DINNER CLUB|AABBK1122J    |
 
-
-  Scenario: Read the card number from input file to fetch details from DB and do API post call to create credit cards and validate the responses
-    Given cards numbers in XL, get its required details from DB and do API post call to create credit cards
+@validateresponse
+  Scenario Outline: Read the card number from input file to fetch details from DB and do API post call to create credit cards and validate the responses
+    Given cards numbers in XL, read the XL to get card numbers for each "<TestCase>"
+    And get the required details from DB and create JSON body
+    Then do API post call to create credit cards
     Then read responses and compare details with DB
     And validate each responses card number is mapped with a PAN card in DB
+  Examples:
+    | TestCase |
+    |TC001     |
+    |TC002     |
+    |TC003     |
+    |TC004     |
+    |TC005     |
+    |TC006     |
+    |TC007     |
+    |TC008     |
+    |TC009     |
+    |TC010     |
