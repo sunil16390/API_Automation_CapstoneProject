@@ -52,7 +52,7 @@ public class CreditCardDB {
                             "         CreditCardNumber      BIGINT(16)             NOT NULL,  \n" +
                             "         Name  VARCHAR(60)     NOT NULL,\n" +
                             "         Year   VARCHAR(8)     NOT NULL,\n" +
-                            "         Limit   VARCHAR(10)     NOT NULL,\n" +
+                            "         CreditLimit   VARCHAR(10)     NOT NULL,\n" +
                             "         ExpDate   VARCHAR(12)            NOT NULL,\n" +
                             "         CardType   VARCHAR(25)     NOT NULL,\n" +
                             "         PRIMARY KEY (CreditCardNumber)        -- Index built automatically on primary-key column\n" +
@@ -105,18 +105,18 @@ public class CreditCardDB {
             System.out.println(e);
         }
     }
-    public void insertRecordIntoTable(String dbName, String CreditCardNumber, String Name, String Year, String Limit, String ExpDate, String CardType){
+    public void insertRecordIntoTable(String dbName, String Name, String Year, String CreditCardNumber, String Limit, String ExpDate, String CardType){
         try {
             connectDbServer();
             if (connection!=null) {
-                if(isCardNumberExist(CreditCardNumber,dbName)==true) {
+                if(isCardNumberExist(CreditCardNumber,dbName,"CreditCardDetails")==true) {
                     System.out.println("This Credit Card Number already exist");
                 }
                 else {
                     Statement statement = connection.createStatement(); // creating statement obj
                     statement.execute(" use "+dbName+"");//using that statement obj, to use database
-                    System.out.println("You are using AadharDB");
-                    String insertIntoTable = "INSERT INTO CreditCardDetails (CreditCardNumber, Name, Year, Limit, ExpDate, CardType)\n" +
+                    System.out.println("You are using " + dbName);
+                    String insertIntoTable = "INSERT INTO CreditCardDetails (CreditCardNumber, Name, Year, CreditLimit, ExpDate, CardType)\n" +
                             "VALUES \n" +
                             "('" + CreditCardNumber + "', '" + Name + "', '" + Year + "', '" + Limit + "', '" + ExpDate + "', '" + CardType + "');";
                     statement.execute(insertIntoTable);
@@ -134,14 +134,13 @@ public class CreditCardDB {
         try {
             connectDbServer();
             if (connection!=null) {
-                if(isCardNumberExist(CreditCardNumber,dbName)==true) {
+                if(isCardNumberExist(CreditCardNumber,dbName,"PanLookup")==true) {
                     System.out.println("This CreditCardNumber already exist");
                 }
                 else {
                     Statement statement = connection.createStatement(); // creating statement obj
                     statement.execute(" use "+dbName+"");//using that statement obj, to use database
-                    System.out.println("You are using AadharDB");
-                    String insertIntoTable = "INSERT INTO PanLookup (CreditCardNumber, PancardNumber)\n" +
+                    String insertIntoTable = "INSERT INTO PanLookup (CreditCardNumber, PanCardNumber)\n" +
                             "VALUES \n" +
                             "('" + CreditCardNumber + "', '" + PancardNumber + "');";
                     statement.execute(insertIntoTable);
@@ -155,13 +154,13 @@ public class CreditCardDB {
             System.out.println(e);
         }
     }
-    public boolean isCardNumberExist(String CreditCardNumber, String dbName){
+    public boolean isCardNumberExist(String CreditCardNumber, String dbName, String tableName){
         boolean flag = false;
         try {
             connectDbServer();
             Statement statement = connection.createStatement(); // creating statement obj
             statement.execute(" use "+dbName+"");//using that statement obj, to use database
-            ResultSet Sqlresult = statement.executeQuery("select count(*) as reowcount from CreditCardDetails where CreditCardNumber =\""+CreditCardNumber+"\";");
+            ResultSet Sqlresult = statement.executeQuery("select count(*) as reowcount from "+tableName+" where CreditCardNumber =\""+CreditCardNumber+"\";");
             while (Sqlresult.next())
             {
                 int runtimeValue = Sqlresult.getInt("reowcount");
@@ -224,15 +223,22 @@ public class CreditCardDB {
         return flag;
     }
     public String readTable(String dbName,String tableName, String CreditCardNumber, String fieldName){
-        String result = "";
+        String result = null;
         try {
             connectDbServer();
             if (connection != null) {
-                Statement statement = connection.createStatement(); // creating statement obj
-                statement.execute(" use "+dbName+";");//using that statement obj, to use database
-                ResultSet Sqlresult = statement.executeQuery("select "+fieldName+" from "+tableName+" where CreditCardNumber =\""+CreditCardNumber+"\";");
-                while (Sqlresult.next()){
-                    result = Sqlresult.getString(fieldName);
+                if(isCardNumberExist(CreditCardNumber,dbName,tableName)==true) {
+
+
+                    Statement statement = connection.createStatement(); // creating statement obj
+                    statement.execute(" use " + dbName + ";");//using that statement obj, to use database
+                    ResultSet Sqlresult = statement.executeQuery("select " + fieldName + " from " + tableName + " where CreditCardNumber =\"" + CreditCardNumber + "\";");
+                    while (Sqlresult.next()) {
+                        result = Sqlresult.getString(fieldName);
+                    }
+                }
+                else {
+                    System.out.println("Credit card not exist");
                 }
             }
             else {System.out.println("Database server is not connected");}
