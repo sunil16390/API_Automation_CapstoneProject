@@ -5,12 +5,12 @@ import Reuseable.ReUseable;
 import io.cucumber.java.en.*;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import io.restassured.response.ResponseBody;
 import org.junit.Assert;
-
 import static io.restassured.RestAssured.*;
 
+
 public class CreateBankAccount {
+
     String databaseName = "";
     boolean isAadharMatching;
     String fname = "";
@@ -21,6 +21,8 @@ public class CreateBankAccount {
     String requestBody = "";
     Response response;
     CreateDB DBobj = new CreateDB();
+
+
     @When("aadha_no from properties file matches with {string} database")
     public void aadha_no_from_properties_file_matches_with_database(String dbName) {
         databaseName = dbName;
