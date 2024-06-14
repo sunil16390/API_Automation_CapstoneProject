@@ -23,11 +23,9 @@ Scenario Outline: Insert the records in the database
     |101010101111|Rahul|Nayak|#110, Richmond City, Bangalore|9988776655|
 
 @AdharAuthAndAccountCreation
-Scenario Outline: After aadhar varification do API call to create new bank account
+Scenario: After aadhar varification do API call to create new bank account
   When aadha_no from properties file matches with "AadharDB" database
-  Given applicant firstname "<Fname>", lastname "<Lname>", address "<Address>" and phone "<Phone>"
-  Then create request body for API call
-  And send post call to create bank account with "<url>"
+  Then send post call to create bank account with "https://reqres.in/api/users"
   Then read and match firstname in response with DB
   And match lastname in response with DB
   And match AadharNo in response with DB
@@ -36,7 +34,5 @@ Scenario Outline: After aadhar varification do API call to create new bank accou
   And validate AccountID is created in response
   Then validate AccountID is numeric
   Then validate createAt in response and its date should be current date
-  Examples:
-    | Fname | Lname | Address | Phone | url |
-    |sunil|kumar|#11, Richmond City, Bangalore|9080706050|https://reqres.in/api/users|
+
 
