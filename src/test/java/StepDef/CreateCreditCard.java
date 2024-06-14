@@ -29,7 +29,9 @@ public class CreateCreditCard {
 
     @Before
     public static void setUpExtent(){
-        extent = new ExtentReports();
+        if(extent == null) {
+            extent = new ExtentReports();
+        }
         spark = new ExtentSparkReporter(System.getProperty("user.dir")+"/ExtentReport/TestReport.html"); //current path of the project using System.getProperty
         spark.config().setDocumentTitle("Create Credit Card API Post call validation");
         spark.config().setReportName("Test Report of Credit Card Creation POST call");
