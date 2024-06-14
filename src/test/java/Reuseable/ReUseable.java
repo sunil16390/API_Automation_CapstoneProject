@@ -28,6 +28,17 @@ public class ReUseable {
         return value;
     }
 
+    public String createBankAccountJsonBody(String fname, String lname, String aadharNo, String address, String phone){
+        String body = "{\n" +
+                "    \"Fname\": \""+fname+"\",\n" +
+                "    \"Lname\": \""+lname+"\",\n" +
+                "    \"Aadhar_No\": \""+aadharNo+"\",\n" +
+                "    \"Address\": \""+address+"\",\n" +
+                "    \"Phone\": \""+phone+"\"\n" +
+                "}";
+        return body;
+    }
+
     public String CreateCreditCardJsonBody(String name, String year, String cardNumber, String limit, String expDate, String cardType){
         String body = "{\n" +
                 "    \"name\": \""+name+"\",\n" +
